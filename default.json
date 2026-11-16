@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "The shared Renovate preset of the whatsaaaa repositories",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigestsToSemver"],
+  "copier": {
+    "enabled": true
+  },
+  "minimumReleaseAge": "1 day",
+  "automerge": false,
+  "packageRules": [
+    {
+      "description": "Our own packages: one group, raised as soon as they are published, as pnpm's minimumReleaseAgeExclude lets them in",
+      "matchPackageNames": ["@whatsaaaa/*"],
+      "groupName": "@whatsaaaa packages",
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "Template updates come from our own template, whose git tags carry no release time to wait on",
+      "matchManagers": ["copier"],
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "Workflow and action refs into whatsaaaa/template move with copier update, together with the callers that use them",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["whatsaaaa/template"],
+      "enabled": false
+    },
+    {
+      "description": "Only Docker Hub reports when an image was pushed: images from other registries, like the Playwright one, are raised without the wait instead of never",
+      "matchDatasources": ["docker"],
+      "minimumReleaseAgeBehaviour": "timestamp-optional"
+    }
+  ]
+}
