@@ -29,6 +29,12 @@
       "description": "Only Docker Hub reports when an image was pushed: images from other registries, like the Playwright one, are raised without the wait instead of never",
       "matchDatasources": ["docker"],
       "minimumReleaseAgeBehaviour": "timestamp-optional"
+    },
+    {
+      "description": "The @tsconfig/node bases follow the Node versions a repository supports, not the newest Node: no replacement PRs",
+      "matchPackageNames": ["@tsconfig/node*"],
+      "matchUpdateTypes": ["replacement"],
+      "enabled": false
     }
   ]
 }
