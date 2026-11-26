@@ -7,17 +7,31 @@
   },
   "minimumReleaseAge": "1 day",
   "automerge": false,
+  "timezone": "Europe/Belgrade",
+  "schedule": ["* 0-5 * * 1"],
+  "updateNotScheduled": false,
+  "rebaseWhen": "conflicted",
   "packageRules": [
+    {
+      "description": "Every non-major update of a repository in one pull request a week, so its CI runs once for all of them",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "pinDigest", "digest"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-non-major"
+    },
     {
       "description": "Our own packages: one group, raised as soon as they are published, as pnpm's minimumReleaseAgeExclude lets them in",
       "matchPackageNames": ["@whatsaaaa/*"],
       "groupName": "@whatsaaaa packages",
-      "minimumReleaseAge": null
+      "minimumReleaseAge": null,
+      "schedule": ["at any time"]
     },
     {
-      "description": "Template updates come from our own template, whose git tags carry no release time to wait on",
+      "description": "Template updates come from our own template, whose git tags carry no release time to wait on. They stay a pull request of their own, raised right away",
       "matchManagers": ["copier"],
-      "minimumReleaseAge": null
+      "minimumReleaseAge": null,
+      "groupName": null,
+      "schedule": ["at any time"]
     },
     {
       "description": "Workflow and action refs into whatsaaaa/template move with copier update, together with the callers that use them",
