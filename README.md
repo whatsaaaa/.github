@@ -27,9 +27,12 @@ A repository uses it with a `renovate.json` of one line:
 
 What it does, on top of Renovate's `config:recommended`:
 
+- **Updates come once a week.** Every minor, patch, pin and digest update of a repository comes in one "all non-major dependencies" pull request, raised early on Monday (before 6 AM, Europe/Belgrade). Major updates come on the same schedule, each in a pull request of its own. Outside that window Renovate leaves its branches alone, so each pull request runs CI once a week at most.
+- **Branches are rebased only when they conflict.** A merge to `main` does not rebase every open Renovate pull request and run its CI again. The rebase checkbox in a pull request still rebases it on demand.
 - **Updates wait a day.** Renovate raises a new version once it is a day old, as pnpm only installs packages that are a day old.
-- **The `@whatsaaaa/*` packages do not wait.** They come in one group, as soon as they are published, which matches the `minimumReleaseAgeExclude: ['@whatsaaaa/*']` of each repository's `pnpm-workspace.yaml`.
-- **Template updates come from Copier.** The `copier` manager reads `.copier-answers.yml` and opens a `copier update` pull request for each new tag of [`whatsaaaa/template`](https://github.com/whatsaaaa/template). They do not wait either: the template is ours, and its git tags carry no release time.
+- **The `@whatsaaaa/*` packages do not wait.** They come in one group, at any time, as soon as they are published, which matches the `minimumReleaseAgeExclude: ['@whatsaaaa/*']` of each repository's `pnpm-workspace.yaml`.
+- **Template updates come from Copier.** The `copier` manager reads `.copier-answers.yml` and opens a `copier update` pull request for each new tag of [`whatsaaaa/template`](https://github.com/whatsaaaa/template), outside the weekly group and at any time. They do not wait either: the template is ours, and its git tags carry no release time.
+- **Security fixes do not wait for Monday.** Renovate raises a fix for a vulnerable version right away, in a pull request of its own.
 - **The template's workflows move with the template.** Renovate leaves `whatsaaaa/template` refs in workflows (`@v1`) alone: a new major comes with `copier update`, together with the callers that use it, and fixes reach every repository through the floating tag.
 - **Third-party actions are pinned by commit SHA,** with the version in a comment, such as `actions/checkout@<sha> # v7.0.0`. Renovate keeps both up to date.
 - **Container images outside Docker Hub do not wait.** Only Docker Hub reports when an image was pushed, so an image like the Playwright one is raised right away instead of never.
